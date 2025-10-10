@@ -1,0 +1,12 @@
+pandas==2.2.3
+numpy==1.23.5
+scipy==1.15.2
+matplotlib==3.6.3
+seaborn==0.12.2
+yfinance==0.2.64
+vectorbt==0.28.0
+scikit-learn==1.6.1
+
+# Custom modules from GitHub
+git+https://github.com/JohnsoN98X/financial-labeling.git#egg=financial-labelling
+git+https://github.com/JohnsoN98X/quant-utilities.git#egg=quant-utilities
