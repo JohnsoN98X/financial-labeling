@@ -55,7 +55,7 @@ financial-labelling/
 ![Signals Example](images/tbl-signal.jpg)
 *Figure 2: Example of Bollinger-based strategy signal agains Triple Barrier Labels*
 
-![Weights Example](images/tbl-weights.jpg)
+![Weights Example](images/tbl-weights.png)
 *Figure 3: Illustration of how time-to-hit and event uniqueness jointly determine the final sample weight*
 
 ---
