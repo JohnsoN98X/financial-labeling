@@ -50,10 +50,13 @@ financial-labelling/
   Vectorbt-based portfolio simulation comparing raw signals against meta-model enhanced signals.  
 
 ![Triple Barrier Example](images/tbl-2.jpg)
-*Figure 1: Example of triple-barrier labeling with horizon and barriers.
+*Figure 1: Example of triple-barrier labeling with horizon and barriers*
 
 ![Signals Example](images/tbl-signal.jpg)
-*Figure 2: Example of Bollinger-based strategy signal agains Triple Barrier Labels
+*Figure 2: Example of Bollinger-based strategy signal agains Triple Barrier Labels*
+
+![Signals Example](images/tbl-weights.jpg)
+*Figure 3: Illustration of how time-to-hit and event uniqueness jointly determine the final sample weight*
 
 ---
 

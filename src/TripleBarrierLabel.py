@@ -124,6 +124,7 @@ class TripleBarrierLabel:
             else:
                 labels.append(0)
                 time_to_hit.append(self._horizon)  # No barrier hit; full horizon
+
         
         self._labels = np.array(labels, dtype=int)
         self._time_to_hit = np.array(time_to_hit, dtype=int)
@@ -132,7 +133,6 @@ class TripleBarrierLabel:
         
         return self
 
-    
     @property
     def labels(self):
         """
@@ -156,6 +156,59 @@ class TripleBarrierLabel:
         if not hasattr(self, '_time_to_hit'):
             raise AttributeError('no times were found, run fit_labels() first')
         return self._time_to_hit
+
+    @property
+    def average_uniqueness_score(self):
+        """
+        np.ndarray of shape (n_samples,)
+            Average uniqueness score for each observation.
+            Computed as the mean inverse concurrency across the
+            label’s active window. Values range from 0 to 1, where
+            higher values indicate lower overlap with other labels.
+        """
+        if not hasattr(self, '_labels'):
+            raise AttributeError('no labels were found, run fit_labels() first')
+    
+        t1 = np.zeros(shape=len(self._data))
+        for i, t in enumerate(self._time_to_hit):
+            t1[i: i+t] += 1
+    
+        weights = []
+        for i, t in enumerate(self._time_to_hit):
+            duration = t1[i: i+t]
+            weights.append(np.mean(1 / duration))
+    
+        return np.array(weights)
+
+    def sample_weights(self, alpha=0.01, clip_min=0.1):
+        """
+        Compute final sample weights for model training.
+
+        Parameters
+        ----------
+        alpha : float, default=0.01
+            Decay rate used in the exponential time-decay term.
+            Higher values increase the penalty on events with
+            longer time_to_hit, reducing their influence.
+        clip_min : float, default=0.1
+            Minimum allowed weight after normalization. Values
+            below this threshold are clipped to `clip_min` to
+            prevent observations from having negligible impact.
+
+        Returns
+        -------
+        np.ndarray of shape (n_samples,)
+            Final sample weights combining:
+            - average uniqueness score, which down-weights highly
+              overlapping labels, and
+            - exponential time-decay based on time_to_hit.
+            The weights are normalized by their mean and then
+            clipped from below at `clip_min`.
+        """
+        uniq = self.average_uniqueness_score
+        decay = np.exp(-alpha * self._time_to_hit)
+        w = uniq * decay
+        return np.clip(w / w.mean(), clip_min, 1.0)
     
     @property
     def barriers(self):
